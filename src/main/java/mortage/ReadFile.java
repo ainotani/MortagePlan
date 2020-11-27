@@ -16,31 +16,29 @@ public class ReadFile {
 			File file = new File(classLoader.getResource(fileName).getFile());
 			Scanner scanner = new Scanner(new FileInputStream(file), "UTF-8");
 			String header = scanner.nextLine();
+			int lineNumber = 1;
 			while (scanner.hasNextLine()) {
 				String data = scanner.nextLine();
-				if (data.equals("")) {
-					data = scanner.nextLine();
-				} else {
-					Mortage mortage = convertData(data);
+				lineNumber++;
+				if (!data.equals("")) {
+					Mortage mortage = convertData(data, lineNumber);
 					mortages.add(mortage);
 				}
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found.");
-			e.printStackTrace();
 		} catch (NoSuchElementException ne) {
 			System.out.println("File is empty.");
-			ne.printStackTrace();
 		} catch (NullPointerException nulle) {
 			System.out.println("File not found.");
-			nulle.printStackTrace();
 		}
 		return mortages;
 	}
 	
-	public Mortage convertData(String data) {
-		Mortage mortage = new Mortage();		
+	public Mortage convertData(String data, int lineNumber) {
+		Mortage mortage = new Mortage();
+		
 		try {
 			//split string into 4 parts
 			String[] splitted = data.split(",");
@@ -48,16 +46,20 @@ public class ReadFile {
 			String part2 = splitted[1];
 			String part3 = splitted[2];
 			String part4 = splitted[3];
+			if (part4.contentEquals("0")) {
+				System.out.println("On line: "+ lineNumber + " Years can't be 0");
+				return null;
+			}
 			//convert parts into right format
 			mortage.setName(part1);
 			mortage.setLoan(Double.parseDouble(part2));
 			mortage.setInterest(Double.parseDouble(part3));
 			mortage.setYears(Integer.parseInt(part4));
 		} catch (NumberFormatException e) {
-			System.out.println("Wrong format.");
+			System.out.println("On line: "+ lineNumber + " Wrong format. NumberFormatException");
 			return null;
 		} catch (IndexOutOfBoundsException ie) {
-			System.out.println("Wrong format. IndexOutOfBounds");
+			System.out.println("On line: "+ lineNumber + " Wrong format. IndexOutOfBoundsException");
 			return null;
 		}
 		return mortage;

@@ -12,17 +12,17 @@ public class MortageMain {
 		Calculator calculator = new Calculator();
 		List<Mortage> mortages = file.readFile(args[0]);
 		List<Mortage> calculatedMortages = new ArrayList<Mortage>();
-		List<String> calculatedMortages2 = new ArrayList<String>();
+		List<String> mortagesToBePrinted = new ArrayList<String>();
 		//remove nulls
 		while (mortages.remove(null)) { 
         } 
 		for (int i = 0; i < mortages.size(); i++) {
 			calculatedMortages.add(calculator.calculate(mortages.get(i)));
-			calculatedMortages2.add(formatOutput(mortages.get(i)));
+			mortagesToBePrinted.add(formatOutput(mortages.get(i)));
         }
 		System.out.println("");
-		for(int i = 0; i < calculatedMortages2.size(); i++) {
-            System.out.println("Prospect "+ (i+1) + ": " + calculatedMortages2.get(i));
+		for(int i = 0; i < mortagesToBePrinted.size(); i++) {
+            System.out.println("Prospect "+ (i+1) + ": " + mortagesToBePrinted.get(i));
         }
 		
 	}
@@ -32,7 +32,7 @@ public class MortageMain {
 		String years = Integer.toString(mortage.getYears());
 		String payment = Double.toString(mortage.getPayment());
 		DecimalFormat df = new DecimalFormat("#.00");
-		df.setRoundingMode(RoundingMode.UP);
+		df.setRoundingMode(RoundingMode.HALF_UP);
 		String loan2 = df.format(mortage.getLoan());
 		String output = name + " wants to borrow " + loan2 + " € for a period of " + years + " years and pay " + payment + " € each month";
 		return output;
